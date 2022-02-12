@@ -1,0 +1,23 @@
+Summary of useful GCC and Clang compiler
+options
+The following is a list of the compiler switches already encountered with the addition of
+other useful switches and why you might want to use them:
+Switch Description
+-Wall Turns on warnings for a wide variety of possible errors.
+-Werror Turns all warnings into errors.
+-std=c11
+-std=c18 Controls which C standard to use for compilation.
+-D <symbol> Defines the <symbol> macro.
+-U <symbol> Undefines <symbol>.
+-o <file> Directs compiled executables to the named <file> name instead of a.out.
+--help Displays the compiler help screen.
+--version Displays the compiler version.
+-O[n]
+-Os
+The optimization level, where for [n], 0 = none – 3 = aggressive.
+s tells the compiler to optimize for size; most operating systems are optimized for size
+only.
+-g
+Generates debugging information to be read by the debugger program when the
+program executes.
+-H Prints the name of each heade

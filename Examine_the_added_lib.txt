@@ -1,0 +1,16 @@
+Method 1
+
+1. Create a simple program—for example, hello.c.
+2. Add the header file you want to find and save it.
+3. In a bash command shell, execute the following:
+cc -H hello.c
+
+
+
+Method 2
+
+cc -H hello.c 2>&1 | grep '^\.\ '
+
+Method 3
+
+locate <filename.h>
