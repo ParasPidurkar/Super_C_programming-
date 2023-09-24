@@ -1,0 +1,10 @@
+fprintf message 0
+fputs message
+fprintf message 1
+fputs message
+fprintf message 2
+fputs message
+fprintf message 3
+fputs message
+fprintf message 4
+fputs message
