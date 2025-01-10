@@ -1,0 +1,3 @@
+/home/akdubey/Music/01_hello_naruto/cmake-build-debug/CMakeFiles/untitled.dir
+/home/akdubey/Music/01_hello_naruto/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/akdubey/Music/01_hello_naruto/cmake-build-debug/CMakeFiles/rebuild_cache.dir
