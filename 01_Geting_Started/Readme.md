@@ -17,11 +17,11 @@ This project is a collection of C programs designed to demonstrate various funct
 
 
    gcc -Wall -Wextra -Werror -o hello 01_Hello_world.c
-./hello
+    ./hello
 
 
-To compile the program using clang you can use:
-clang -Wall -Wextra -Werror -o hello 01_Hello_world.c
-./hello
+    To compile the program using clang you can use:
+    clang -Wall -Wextra -Werror -o hello 01_Hello_world.c
+    ./hello
 
-gcc -std=c90 -o hello 02_OG_Hello_world.c
+    gcc -std=c90 -o hello 02_OG_Hello_world.c
