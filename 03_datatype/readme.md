@@ -28,3 +28,11 @@ This project is a collection of C programs designed to demonstrate various funct
 
    gcc 06_limits.c
    ./a.out
+
+   gcc 07_Floating_datatype.c
+   ./a.out
+
+   gcc 08_format_specifier.c
+   ./a.out
+
+   
