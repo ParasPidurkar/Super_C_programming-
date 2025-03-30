@@ -49,3 +49,6 @@ This project is a collection of C programs designed to demonstrate various funct
 
     gcc 11_Access_operator.c
     ./a.out
+
+    gcc 12_indexing_tricks.c 
+    ./a.out
