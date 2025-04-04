@@ -52,3 +52,4 @@ This project is a collection of C programs designed to demonstrate various funct
 
     gcc 12_indexing_tricks.c 
     ./a.out
+   
