@@ -12,6 +12,7 @@
  * Every node keeps a parent pointer. That buys three things: erase needs
  * no compare function, in-order iteration needs no stack, and nothing in
  * here recurses, so a degenerate (list-shaped) tree cannot blow the stack.
+ * The same parent pointers drive the preorder and postorder walks.
  *
  * The tree is NOT balanced. Inserting sorted keys gives O(n) depth. For
  * guaranteed O(log n), use a red-black tree (the kernel's rbtree); its
@@ -62,5 +63,13 @@ struct bst_node *bst_first(const struct bst_root *root);
 struct bst_node *bst_last(const struct bst_root *root);
 struct bst_node *bst_next(const struct bst_node *node);
 struct bst_node *bst_prev(const struct bst_node *node);
+
+/* Preorder: node, then left subtree, then right subtree. */
+struct bst_node *bst_first_preorder(const struct bst_root *root);
+struct bst_node *bst_next_preorder(const struct bst_node *node);
+
+/* Postorder: left subtree, then right subtree, then node. */
+struct bst_node *bst_first_postorder(const struct bst_root *root);
+struct bst_node *bst_next_postorder(const struct bst_node *node);
 
 #endif /* BST_H */

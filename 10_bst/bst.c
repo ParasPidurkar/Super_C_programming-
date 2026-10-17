@@ -162,3 +162,68 @@ struct bst_node *bst_prev(const struct bst_node *node)
 		node = parent;
 	return parent;
 }
+
+/* The root is always visited first. */
+struct bst_node *bst_first_preorder(const struct bst_root *root)
+{
+	return root->node;
+}
+
+/*
+ * Preorder successor. Go down to the left child, else the right child.
+ * At a leaf, climb until we come up from a left child whose parent has
+ * a right subtree; that right child is next.
+ */
+struct bst_node *bst_next_preorder(const struct bst_node *node)
+{
+	struct bst_node *parent;
+
+	if (node->left)
+		return node->left;
+	if (node->right)
+		return node->right;
+
+	while ((parent = node->parent)) {
+		if (node == parent->left && parent->right)
+			return parent->right;
+		node = parent;
+	}
+	return NULL;
+}
+
+/* Descend from @node, preferring left, until reaching a leaf. */
+static struct bst_node *bst_deepest_left(struct bst_node *node)
+{
+	if (node)
+		for (;;) {
+			if (node->left)
+				node = node->left;
+			else if (node->right)
+				node = node->right;
+			else
+				break;
+		}
+	return node;
+}
+
+struct bst_node *bst_first_postorder(const struct bst_root *root)
+{
+	return bst_deepest_left(root->node);
+}
+
+/*
+ * Postorder successor. Coming up from a left child, the parent's right
+ * subtree (if any) comes first; otherwise the parent itself is next.
+ *
+ * This reads only @node->parent and the parent's fields, never @node's
+ * children, so a caller may free @node right after fetching its
+ * successor. That makes postorder the natural way to destroy a tree.
+ */
+struct bst_node *bst_next_postorder(const struct bst_node *node)
+{
+	struct bst_node *parent = node->parent;
+
+	if (parent && node == parent->left && parent->right)
+		return bst_deepest_left(parent->right);
+	return parent;
+}
