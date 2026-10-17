@@ -90,6 +90,9 @@ static void help(void)
 	     "  min / max        smallest / largest key\n"
 	     "  list             all keys in order (bst_first + bst_next)\n"
 	     "  rlist            all keys in reverse (bst_last + bst_prev)\n"
+	     "  inorder          same as list: left, node, right\n"
+	     "  preorder         node, left, right\n"
+	     "  postorder        left, right, node\n"
 	     "  show             draw the tree (right subtree on top)\n"
 	     "  clear            erase everything\n"
 	     "  help             this text\n"
@@ -251,6 +254,26 @@ static void do_list(int reverse)
 	puts(bst_empty(&root) ? "  (empty)" : "");
 }
 
+static void do_preorder(void)
+{
+	struct bst_node *n;
+
+	printf(" ");
+	for (n = bst_first_preorder(&root); n; n = bst_next_preorder(n))
+		printf(" %d", key_of(n));
+	puts(bst_empty(&root) ? "  (empty)" : "");
+}
+
+static void do_postorder(void)
+{
+	struct bst_node *n;
+
+	printf(" ");
+	for (n = bst_first_postorder(&root); n; n = bst_next_postorder(n))
+		printf(" %d", key_of(n));
+	puts(bst_empty(&root) ? "  (empty)" : "");
+}
+
 static void clear(void)
 {
 	struct bst_node *n;
@@ -307,6 +330,15 @@ int main(int argc, char **argv)
 			continue;
 		} else if (!strcmp(cmd, "list") || !strcmp(cmd, "rlist")) {
 			do_list(cmd[0] == 'r');
+			continue;
+		} else if (!strcmp(cmd, "inorder")) {
+			do_list(0);
+			continue;
+		} else if (!strcmp(cmd, "preorder")) {
+			do_preorder();
+			continue;
+		} else if (!strcmp(cmd, "postorder")) {
+			do_postorder();
 			continue;
 		} else if (!strcmp(cmd, "help")) {
 			help();
