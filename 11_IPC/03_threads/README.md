@@ -26,9 +26,10 @@ A simple way to picture it: a **process** is a kitchen and a **thread** is a coo
 4. [The examples, one by one](#the-examples-one-by-one)
 5. [Which tool should I use?](#which-tool-should-i-use)
 6. [API reference](#api-reference)
-7. [Inspecting threads from the shell](#inspecting-threads-from-the-shell)
-8. [Common pitfalls](#common-pitfalls)
-9. [Exercises](#exercises)
+7. [Alternatives to pthreads](#alternatives-to-pthreads)
+8. [Inspecting threads from the shell](#inspecting-threads-from-the-shell)
+9. [Common pitfalls](#common-pitfalls)
+10. [Exercises](#exercises)
 
 ---
 
@@ -486,6 +487,125 @@ Use `pthread_sigmask`, not `sigprocmask`: what `sigprocmask` does in a multithre
 `pthread_*` functions **return** an error number (0 = success) instead of setting `errno`. That's why `common.h` has `check(err, what)`.
 
 Every function has a man page: `man pthread_create`, `man sem_wait`, and so on (install `manpages-posix-dev` if they're missing).
+
+---
+
+## Alternatives to pthreads
+
+pthreads is the usual choice on Linux, but it isn't the only way to get threads in C.
+
+### C11 standard threads: `<threads.h>`
+
+Part of the C language standard since C11, so it is the closest replacement. The API maps almost one to one:
+
+| pthreads | C11 `<threads.h>` |
+|----------|-------------------|
+| `pthread_t` | `thrd_t` |
+| `pthread_create(&t, NULL, fn, arg)` | `thrd_create(&t, fn, arg)` |
+| `void *fn(void *arg)` | `int fn(void *arg)` |
+| `pthread_join(t, &ret)` | `thrd_join(t, &res)` (`res` is an `int`) |
+| `pthread_detach(t)` / `pthread_exit(ret)` | `thrd_detach(t)` / `thrd_exit(res)` |
+| `pthread_mutex_t` | `mtx_t` (`mtx_init`, `mtx_lock`, `mtx_unlock`) |
+| `pthread_cond_t` | `cnd_t` (`cnd_wait`, `cnd_signal`, `cnd_broadcast`) |
+| `pthread_key_t` | `tss_t` (`tss_create`, `tss_get`, `tss_set`) |
+| `_Thread_local` | `thread_local` |
+| `pthread_once` | `call_once` |
+| return value 0 = success | return value `thrd_success` |
+
+Example 01 rewritten with C11 threads (several arguments still go in a struct):
+
+```c
+#include <stdio.h>
+#include <threads.h>
+
+struct job {
+	int id;
+	long from, to;
+	long result;
+};
+
+static int sum_range(void *p)	/* returns int, not void * */
+{
+	struct job *j = p;
+
+	for (long i = j->from; i <= j->to; i++)
+		j->result += i;
+	return 0;
+}
+
+int main(void)
+{
+	thrd_t t;
+	struct job j = { .id = 1, .from = 1, .to = 100 };
+
+	if (thrd_create(&t, sum_range, &j) != thrd_success)
+		return 1;
+	thrd_join(t, NULL);
+	printf("sum = %ld\n", j.result);	/* 5050 */
+	return 0;
+}
+```
+
+```sh
+gcc -std=c11 -Wall c11_threads.c -o c11_threads -pthread
+```
+
+- **Pros:** standard and portable, including Windows (MSVC 2022 and later).
+- **Cons:** fewer features: no thread attributes (stack size, created-detached), no read-write locks, no barriers, no per-thread signal masks. Needs glibc 2.28 or later, and on Linux it is a thin wrapper around pthreads anyway.
+
+### OpenMP
+
+You mark loops with compiler directives and the compiler creates and joins the threads:
+
+```c
+long sum = 0;
+#pragma omp parallel for reduction(+:sum)
+for (long i = 1; i <= 1000000; i++)
+	sum += i;
+```
+
+```sh
+gcc -fopenmp omp_sum.c -o omp_sum
+```
+
+Excellent for number-crunching loops. Poor for long-lived workers, servers or producer/consumer designs.
+
+### Linux `clone()`
+
+The raw system call that pthreads itself uses. You allocate the stack yourself and pass flags such as `CLONE_VM | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD`. Good for learning what a thread really is. Avoid it in real code: libc (`errno`, `malloc`, stdio locks) assumes threads were created by pthreads.
+
+### Platform APIs
+
+| Platform | API |
+|----------|-----|
+| Windows | `_beginthreadex()` (or `CreateThread()`), `WaitForSingleObject()`, `CRITICAL_SECTION`, `SRWLOCK` |
+| macOS / iOS | Grand Central Dispatch: `dispatch_async()` on task queues instead of raw threads |
+
+### Cross-platform libraries
+
+These use pthreads on Linux and native threads on Windows:
+
+| Library | Thread API |
+|---------|------------|
+| GLib | `g_thread_new`, `GMutex`, `GCond`, `GThreadPool` |
+| SDL | `SDL_CreateThread`, `SDL_mutex` |
+| libuv | `uv_thread_create`, `uv_mutex_t`, built-in thread pool |
+| tinycthread | single-file `<threads.h>` for compilers that lack C11 threads |
+
+### Not quite threads
+
+- **`fork()`**: separate processes. No shared memory unless you set it up, so they talk through IPC (`../01_message_queue`, `../02_signals`).
+- **Coroutines** (`ucontext`, libco, libdill): many tasks take turns on one thread. Cheap switching, but no true parallelism.
+
+### Which one?
+
+| Situation | Use |
+|-----------|-----|
+| Linux/POSIX only, need every feature | pthreads |
+| Portable C, basic threads and locks are enough | C11 `<threads.h>` |
+| Parallelise a heavy loop | OpenMP |
+| Windows-only code | `_beginthreadex` |
+| Already using GLib / SDL / libuv | that library's threads |
 
 ---
 
