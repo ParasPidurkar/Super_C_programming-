@@ -1,0 +1,8 @@
+01_create_join
+02_race_mutex
+03_condvar
+04_semaphore
+05_tls_once
+06_thread_signals
+*-san
+*-tsan
