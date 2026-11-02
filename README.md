@@ -27,6 +27,7 @@ A hands-on collection of C (and some C++) examples, from "Hello, world" up to li
 | [`11_IPC/02_signals`](11_IPC/02_signals/) | default actions, `sigaction`, masks, real-time signals, `SIGCHLD`, `signalfd` |
 | [`11_IPC/03_threads`](11_IPC/03_threads/) | POSIX threads: create/join, races, mutexes, atomics, condition variables, semaphores, thread-local storage, signals with threads |
 | [`11_IPC/04_std_thread`](11_IPC/04_std_thread/) | the same thread lessons in C++20: `std::thread`/`jthread`, `mutex`, `condition_variable`, `counting_semaphore`, `latch`, `thread_local`, `stop_token` |
+| [`11_IPC/05_c11_threads`](11_IPC/05_c11_threads/) | standard C11 `<threads.h>`: threads, mutexes, condition variables, thread-specific storage, `call_once`; when to use it vs pthreads |
 
 The top-level [`signals`](signals/) folder is a quick first look at signals. [`11_IPC/02_signals`](11_IPC/02_signals/) covers them in depth.
 
@@ -36,7 +37,7 @@ The top-level [`signals`](signals/) folder is a quick first look at signals. [`1
 2. **Building code:** 07 → 08
 3. **Data structures:** 09 → 10
 4. **How a program runs:** 13 → `signals`
-5. **Systems programming:** 11_IPC (message queues → signals → threads → std::thread)
+5. **Systems programming:** 11_IPC (message queues → signals → threads → C11 threads → std::thread)
 6. **C++:** 12_templates, then 11_IPC/04_std_thread
 
 ## Requirements

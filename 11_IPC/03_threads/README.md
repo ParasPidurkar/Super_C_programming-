@@ -496,7 +496,7 @@ pthreads is the usual choice on Linux, but it isn't the only way to get threads 
 
 ### C11 standard threads: `<threads.h>`
 
-Part of the C language standard since C11, so it is the closest replacement. The API maps almost one to one:
+Part of the C language standard since C11, so it is the closest replacement. [`../05_c11_threads`](../05_c11_threads/) has a full worked example and a guide to choosing between the two. The API maps almost one to one:
 
 | pthreads | C11 `<threads.h>` |
 |----------|-------------------|

@@ -8,6 +8,7 @@ Ways for separate processes to exchange data on Linux. Each topic has its own fo
 | [`02_signals`](02_signals/)                | default actions, `sigaction`, masks, real-time signals, `SIGCHLD`, `signalfd` |
 | [`03_threads`](03_threads/)                | pthreads: create/join, races, mutexes, atomics, condition variables, semaphores, TLS, signals with threads |
 | [`04_std_thread`](04_std_thread/)          | the same lessons in C++20: `std::thread`/`jthread`, `mutex`, `condition_variable`, `counting_semaphore`, `latch`, `thread_local`, `stop_token` |
+| [`05_c11_threads`](05_c11_threads/)        | standard C11 `<threads.h>`: `thrd_*`, `mtx_*`, `cnd_*`, `tss_*`, `call_once`, and pthreads vs C11 |
 
 Quick start:
 
